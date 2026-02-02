@@ -15,12 +15,13 @@ if {[info exists ::env(CTS_LAYER)]} {
   } else {
     set fix_layer "bottom"
   }
+  puts "CTS LAYER: $cts_layer"
 }
 
 mark_insts_by_master "*${fix_layer}*" FIRM
 puts "Marked ${fix_layer} instances as FIRM"
 
-apply_tier_policy $cts_layer -cts_safe 1
+apply_tier_policy $cts_layer -cts_safe 1 -fixlib 1
 
 # Clone clock tree inverters next to register loads
 # so cts does not try to buffer the inverted clocks.

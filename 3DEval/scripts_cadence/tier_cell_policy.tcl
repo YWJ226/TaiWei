@@ -29,17 +29,25 @@ proc _set_dont_use {cells {flag true}} {
     catch { set_dont_use $c $flag }
     # Some versions don't accept the boolean second argument, so fallback to single-argument syntax (sets to true)
     if {$flag} { catch { set_dont_use $c } }
+    puts "set_dont_use $c"
   }
 }
 
 # Expand wildcard names into lib cell objects/names, as robustly as possible
+# Expand wildcard names into lib cell objects/names, robustly for Common UI
 proc _expand_libcells {patterns} {
   set out {}
   foreach p $patterns {
-    # Prefer get_lib_cells; if unavailable, use the wildcard name directly (for set_dont_use to accept)
     if {![catch {set hits [get_lib_cells $p]}]} {
       if {[llength $hits] > 0} {
-        foreach h $hits { lappend out $h }
+        foreach h $hits {
+          if {[catch {set name [get_object_name $h]} err]} {
+             if {[catch {set name [get_property $h name]} err2]} {
+                set name $h
+             }
+          }
+          lappend out $name
+        }
         continue
       }
     }
@@ -74,16 +82,43 @@ proc box_flat4 {box} {
   return $box
 }
 
-# 在 Innovus 中按指定 site 重构 rows
-#   site_name : 目标 site（例如 "asap7sc7p5t" / "FreePDK45_38x28_10R_NP_162NW_34O"）
-#   out_def   : 可选，如非空则顺便导出 floorplan DEF
-proc rebuild_rows_for_site {site_name} {
+proc rebuild_rows_for_site {site_name {core_margin 0}} {
+  # 1. Basic validation
   if {$site_name eq ""} {
     puts "ERROR(INV): rebuild_rows_for_site: empty site_name."
     return
   }
+
+  # 2. Retrieve DieBox
+  set die_bbox [get_db current_design .bbox]
+  
+  # --- ROBUSTNESS FIX ---
+  # If die_bbox is nested like {{0.0 0.0 11.4 11.2}}, llength will be 1.
+  # If die_bbox is flat like {0.0 0.0 11.4 11.2}, llength will be 4.
+  # We peel off the outer layer if it is nested.
+  set die_bbox [lindex $die_bbox 0]
+  set core_margin $::env(CORE_MARGIN)
+  # Now die_bbox is guaranteed to be flat: {0.0 0.0 11.4 11.2}
+  lassign $die_bbox die_x1 die_y1 die_x2 die_y2
+
+  # 3. Calculate new area with margin applied
+  set new_x1 [expr $die_x1 + $core_margin]
+  set new_y1 [expr $die_y1 + $core_margin]
+  set new_x2 [expr $die_x2 - $core_margin]
+  set new_y2 [expr $die_y2 - $core_margin]
+
+  # Sanity check
+  if {$new_x1 >= $new_x2 || $new_y1 >= $new_y2} {
+    puts "ERROR(INV): CORE_MARGIN ($core_margin) is too large for the current DieBox {$die_bbox}."
+    return
+  }
+
+  puts "INFO(INV): Rebuilding rows for site '$site_name'"
+  puts "INFO(INV): Row Area: {$new_x1 $new_y1 $new_x2 $new_y2}"
+
+  # 4. Delete and Re-create
   deleteRow -all
-  createRow -site $site_name
+  createRow -site $site_name -area [list $new_x1 $new_y1 $new_x2 $new_y2]
 }
 
 # Sets the placement status of tier-specific cells.
@@ -178,6 +213,8 @@ proc apply_tier_policy {tier args} {
   # New options (default: lock nets)
   array set opt {
     -quiet               0
+    -fixlib 0
+    -notouch 0
   }
   if {([llength $args] % 2) != 0} {
     error "apply_tier_policy: args must be key-value pairs, got: $args"
@@ -197,11 +234,9 @@ proc apply_tier_policy {tier args} {
 
   if {$tier eq "upper"} {
     # (A) dont_use policy (unchanged)
-    if {[llength $DNU_UP]} {
+    if {$opt(-fixlib)} {
       _set_dont_use [_expand_libcells $DNU_UP] true
-    } else {
-      _set_dont_use [_expand_libcells "*_bottom"] true
-    }
+    } 
 
     if {[llength $FILL_UP]} { setFillerMode -core $FILL_UP }
 
@@ -210,16 +245,16 @@ proc apply_tier_policy {tier args} {
     }
 
     # (B) NEW: lock the OTHER tier by master suffix "*_bottom"
-    set_dont_touch_by_ref_suffix "*_bottom" \
+    if {$opt(-notouch)} {
+      set_dont_touch_by_ref_suffix "*_bottom" \
       -quiet $opt(-quiet)
+    }
 
-    puts "INFO: Tier policy applied for UPPER: dont_use(bottom libs), dont_touch(bottom insts), filler=UPPER."
+    # puts "INFO: Tier policy applied for UPPER: dont_use(bottom libs), dont_touch(bottom insts), filler=UPPER."
   } else {
     # bottom
-    if {[llength $DNU_BOT]} {
+    if {$opt(-fixlib)} {
       _set_dont_use [_expand_libcells $DNU_BOT] true
-    } else {
-      _set_dont_use [_expand_libcells "*_upper"] true
     }
 
     if {[llength $FILL_BOT]} { setFillerMode -core $FILL_BOT }
@@ -229,11 +264,13 @@ proc apply_tier_policy {tier args} {
     }
 
     # NEW: lock the OTHER tier by master suffix "*_upper"
-    set_dont_touch_by_ref_suffix "*_upper" \
-      -quiet $opt(-quiet)
+    if {$opt(-notouch)} {
+      set_dont_touch_by_ref_suffix "*_upper" \
+        -quiet $opt(-quiet)
+    }
 
-    puts "INFO: Tier policy applied for BOTTOM: dont_use(upper libs), dont_touch(upper insts), filler=BOTTOM."
+    # puts "INFO: Tier policy applied for BOTTOM: dont_use(upper libs), dont_touch(upper insts), filler=BOTTOM."
   }
-
+  puts "Rebuild Row for $tier"
   rebuild_rows_for_site $::env(PLACE_SITE)
 }

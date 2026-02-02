@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ###
- # @Author: JeanneWillis hi@jeannewillis.cn
+ # @Author: JeanneWillis hi@jeannewillis.cn 
  # @Date: 2026-01-17 18:31:45
  # @LastEditors: JeanneWillis hi@jeannewillis.cn
  # @LastEditTime: 2026-01-18 00:33:57
@@ -12,10 +12,11 @@
 # Toolchain paths (override in your shell if needed)
 # ------------------------------------------------------------------------------
 export PIN3D_DIR="${PIN3D_DIR:-$(pwd)}"
+export FLOW_HOME=$(pwd)
 export NUM_CORES="${NUM_CORES:-16}"
 
 # OpenROAD toolchain
-export ORFS_DIR="${ORFS_DIR:-$(pwd)/../OpenROAD-flow-scripts}"
+export ORFS_DIR="${ORFS_DIR:-/OpenROAD-flow-scripts}"
 export OPENROAD_EXE="${OPENROAD_EXE:-${ORFS_DIR}/tools/install/OpenROAD/bin/openroad}"
 export YOSYS_EXE="${YOSYS_EXE:-${ORFS_DIR}/tools/install/yosys/bin/yosys}"
 export STA_EXE="${STA_EXE:-${ORFS_DIR}/tools/install/OpenROAD/bin/sta}"

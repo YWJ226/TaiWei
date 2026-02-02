@@ -18,10 +18,12 @@ make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config2d.mk clean_all
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config.mk clean_all
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config2d.mk cds-synth
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config2d.mk cds-preplace
-make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config2d.mk cds-tier-partition
+make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config2d.mk ${CDS_PARTITION_TARGET}
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config.mk ord-pre
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config.mk cds-3d-pdn
 make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config_upper_cover.mk cds-place-init
+make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config_bottom_cover.mk cds-place-init-upper
+make DESIGN_CONFIG=designs/asap7_3D/${DESIGN_NICKNAME}/config_upper_cover.mk cds-place-init-bottom
 iteration=1
 for ((i=1;i<=iteration;i++))
 do

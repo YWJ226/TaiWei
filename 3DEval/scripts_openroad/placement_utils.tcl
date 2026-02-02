@@ -90,50 +90,22 @@ proc calculate_placement_density {} {
 
   # 1) If no addon requested, just use base
   if {![info exists ::env(PLACE_DENSITY_LB_ADDON)]} {
-  puts "INFO: PLACE_DENSITY_LB_ADDON not set, using PLACE_DENSITY=$base_density"
-  return $base_density
-  }
-
-  # 2) DB preflight
-  set db   [ord::get_db]
-  if {$db eq ""} {
-  puts "WARN: no DB; fallback density $base_density"
-  return $base_density
-  }
-  set chip [$db getChip]
-  if {$chip eq ""} {
-  puts "WARN: no chip; fallback density $base_density"
-  return $base_density
-  }
-  set block [$chip getBlock]
-  if {$block eq ""} {
-  puts "WARN: no block; fallback density $base_density"
-  return $base_density
-  }
-  if {[llength [$block getRows]] == 0} {
-  puts "WARN: no rows in block (DEF may lack ROWS); fallback density $base_density"
-  return $base_density
+    puts "INFO: PLACE_DENSITY_LB_ADDON not set, using PLACE_DENSITY=$base_density"
+    return $base_density
   }
 
   # 3) Pad arguments must be integers; default to 0 if missing
   set pad_l [::_as_int $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) 0]
   set pad_r [::_as_int $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) 0]
-
-  # 4) Compute LB with catch to absorb GPL-0301 on older builds / invalid states
+  # 4) Compute LB with catch to absorb GPL-0301 on older builds / invalid states 
   set lb 0.0
   set rc [catch {
-  if {[info procs gpl::get_global_placement_uniform_density] ne ""} {
     set lb [gpl::get_global_placement_uniform_density -pad_left $pad_l -pad_right $pad_r]
-  } elseif {[info procs gpl::get_global_placement_uniform_density_cmd] ne ""} {
-    set lb [gpl::get_global_placement_uniform_density_cmd -pad_left $pad_l -pad_right $pad_r]
-  } else {
-    error "No GPL uniform-density helper in this build"
-  }
   } err]
 
   if {$rc} {
-  puts "WARN: failed to get density LB (GPL-0301/compat): $err ; fallback $base_density"
-  return $base_density
+    puts "ERRORINFO:\n$::errorInfo"
+    return $base_density
   }
 
   # 5) Apply addon blend and a tiny nudge
@@ -205,22 +177,26 @@ proc _as_list {envname} {
 proc _expand_libcells {patterns} {
   set out {}
   foreach p $patterns {
-  if {![catch {set hits [get_lib_cells $p]}]} {
-    if {[llength $hits] > 0} {
-    foreach h $hits { lappend out $h }
-    continue
+    # 1. Try to find cells matching the pattern
+    if {![catch {set hits [get_lib_cells $p]}]} {
+      if {[llength $hits] > 0} {
+        foreach h $hits { 
+          lappend out [::sta::LibertyCell_name $h] 
+        }
+        continue
+      }
     }
-  }
-  lappend out $p
   }
   return [lsort -unique $out]
 }
 
 # set_dont_use prefers batch; if it fails, fall back to per-cell
 proc _set_dont_use {cells} {
+  # puts "_set_dont_use $cells"
   if {![llength $cells]} { return }
-  if {[catch {set_dont_use $cells}]} {
-  foreach c $cells { catch { set_dont_use $c } }
+  foreach c $cells { 
+    set_dont_use $c 
+    puts "set_dont_use $c"
   }
 }
 
@@ -395,6 +371,7 @@ proc apply_tier_policy {tier args} {
   array set opt {
     -cts_safe 0
     -quiet    0
+    -fixlib   0
   }
   if {([llength $args] % 2) != 0} {
     error "apply_tier_policy: args must be key-value pairs, got: $args"
@@ -409,7 +386,9 @@ proc apply_tier_policy {tier args} {
 
   if {$tier eq "upper"} {
     # dont_use for synthesis/placement choices
-    if {[llength $dnu_up]} { _set_dont_use [_expand_libcells $dnu_up] } else { _set_dont_use [_expand_libcells "*_bottom"] }
+    if {$opt(-fixlib)} { 
+      _set_dont_use [_expand_libcells $dnu_up] 
+    }
 
     set ::env(TIEHI_CELL_AND_PORT) $::env(UPPER_TIEHI_CELL_AND_PORT)
     set ::env(TIELO_CELL_AND_PORT) $::env(UPPER_TIELO_CELL_AND_PORT)
@@ -419,8 +398,9 @@ proc apply_tier_policy {tier args} {
 
     # default: set_dont_touch other tier; CTS-safe: skip
     if {!$opt(-cts_safe)} {
+      puts "INFO(OR): cts_safe=0."
       or_set_dont_touch_by_master "*_bottom" -quiet $opt(-quiet)
-    } elseif {!$opt(-quiet)} {
+    } else {
       puts "INFO(OR): cts_safe=1 -> skip set_dont_touch for other tier."
     }
 
@@ -428,15 +408,18 @@ proc apply_tier_policy {tier args} {
       puts "INFO(OR): Tier=UPPER applied. cts_safe=$opt(-cts_safe)"
     }
   } else {
-    if {[llength $dnu_bot]} { _set_dont_use [_expand_libcells $dnu_bot] } else { _set_dont_use [_expand_libcells "*_upper"] }
+    if {$opt(-fixlib)} { 
+      _set_dont_use [_expand_libcells $dnu_bot] 
+    }
 
     set ::env(TIEHI_CELL_AND_PORT) $::env(BOTTOM_TIEHI_CELL_AND_PORT)
     set ::env(TIELO_CELL_AND_PORT) $::env(BOTTOM_TIELO_CELL_AND_PORT)
     if {[info exists ::env(BOTTOM_SITE)]} { set ::env(PLACE_SITE) $::env(BOTTOM_SITE) }
 
     if {!$opt(-cts_safe)} {
+      puts "INFO(OR): cts_safe=0."
       or_set_dont_touch_by_master "*_upper" -quiet $opt(-quiet)
-    } elseif {!$opt(-quiet)} {
+    } else {
       puts "INFO(OR): cts_safe=1 -> skip set_dont_touch for other tier."
     }
 

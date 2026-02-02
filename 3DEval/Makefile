@@ -169,6 +169,7 @@ ord-versions:
 
 .PHONY: ord-2d_flow
 ord-2d_flow:
+	@$(call _mkstdirs)
 	@$(OPENROAD_CMD) $(OPENROAD_SCRIPTS_DIR)/openroad_2d_flow.tcl 2>&1 | tee -a $(LOG_DIR)/openroad_2d_flow.log
 
 # ---- Generate preprocessed Liberty explicitly ----
@@ -232,6 +233,7 @@ ord-preplace:
 
 .PHONY: ord-tier-partition
 ord-tier-partition:
+	@$(call _mkstdirs)
 	@echo "[ORD] Tier partition"
 	@$(OPENROAD_CMD) $(OPENROAD_SCRIPTS_DIR)/tier_partition.tcl 2>&1 | tee -a $(LOG_DIR)/2_tritonpart.log
 	@echo "[ORD] Copy 2D artifacts to $(3D_PLATFORM)"
@@ -240,6 +242,7 @@ ord-tier-partition:
 
 .PHONY: ord-test-partition
 ord-test-partition:
+	@$(call _mkstdirs)
 	@echo "[ORD] Tier partition"
 	@$(OPENROAD_CMD) $(OPENROAD_SCRIPTS_DIR)/tier_partition_experiment.tcl 2>&1
 	@echo "[ORD] Copy 2D artifacts to $(3D_PLATFORM)"
@@ -265,12 +268,24 @@ ord-place-init:
 	@$(call _mkstdirs)
 	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/place_init.tcl,$(LOG_DIR)/3_place_init.log)
 
+.PHONY: ord-place-init-upper
+ord-place-init-upper:
+	@$(call _mkstdirs)
+	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/place_init_upper.tcl,$(LOG_DIR)/3_place_init_upper.log)
+
+.PHONY: ord-place-init-bottom
+ord-place-init-bottom:
+	@$(call _mkstdirs)
+	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/place_init_bottom.tcl,$(LOG_DIR)/3_place_init_bottom.log)
+
 .PHONY: ord-place-upper
 ord-place-upper:
+	@$(call _mkstdirs)
 	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/place_upper.tcl,$(LOG_DIR)/3_place_upper.log)
 
 .PHONY: ord-place-bottom
 ord-place-bottom:
+	@$(call _mkstdirs)
 	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/place_bottom.tcl,$(LOG_DIR)/3_place_bottom.log)
 
 .PHONY: ord-3d-pdn
@@ -340,6 +355,7 @@ ord-re-cts:
 
 .PHONY: ord-route
 ord-route:
+	@$(call _mkstdirs)
 	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/global_route.tcl,$(LOG_DIR)/5_1_grt.log)
 	@$(call _or,$(OPENROAD_SCRIPTS_DIR)/detail_route.tcl,$(LOG_DIR)/5_2_route.log)
 	@cp -f $(RESULTS_DIR)/4_cts.sdc $(RESULTS_DIR)/5_route.sdc 2>/dev/null || true
@@ -460,6 +476,7 @@ cds-preplace:
 
 .PHONY: cds-2d_flow
 cds-2d_flow:
+	@$(call _mkstdirs)
 	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/innovus_2d_flow.log -files $(CADENCE_SCRIPTS_DIR)/innovus_2d_flow.tcl,$(LOG_DIR)/innovus_2d_flow.log)
 
 .PHONY: cds-tier-partition
@@ -501,6 +518,16 @@ cds-place-init:
 	@$(call _mkstdirs)
 	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/cadence_innovus_place_init.log -files $(CADENCE_SCRIPTS_DIR)/innovus_place3D_init.tcl,$(LOG_DIR)/3_place_init.log)
 
+.PHONY: cds-place-init-upper
+cds-place-init-upper:
+	@$(call _mkstdirs)
+	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/cadence_innovus_place_init_upper.log -files $(CADENCE_SCRIPTS_DIR)/innovus_place3D_init_upper.tcl,$(LOG_DIR)/3_place_init_upper.log)
+
+.PHONY: cds-place-init-bottom
+cds-place-init-bottom:
+	@$(call _mkstdirs)
+	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/cadence_innovus_place_init_bottom.log -files $(CADENCE_SCRIPTS_DIR)/innovus_place3D_init_bottom.tcl,$(LOG_DIR)/3_place_init_bottom.log)
+	
 .PHONY: cds-place-upper
 cds-place-upper:
 	@$(call _mkstdirs)
@@ -550,6 +577,11 @@ cds-route:
 cds-final:
 	@$(call _mkstdirs)
 	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/cadence_innovus_3d_final.log -files $(CADENCE_SCRIPTS_DIR)/innovus_3d_final.tcl,$(LOG_DIR)/6_final.log)
+
+.PHONY: cds-restore
+cds-restore:
+	@$(call _mkstdirs)
+	@$(call _cad,$(INNOVUS_CMD) -overwrite -log $(LOG_DIR)/cadence_innovus_3d_final-re.log -files $(CADENCE_SCRIPTS_DIR)/innovus_3d_final-re.tcl,$(LOG_DIR)/6_final-re.log)
 
 .PHONY: clean_all
 clean_all:

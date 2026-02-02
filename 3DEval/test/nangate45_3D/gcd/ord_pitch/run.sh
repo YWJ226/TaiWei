@@ -14,11 +14,6 @@ export DESIGN_DIMENSION="3D"
 export DESIGN_NICKNAME="gcd"
 export USE_FLOW="openroad"
 export FLOW_VARIANT="openroad_${hbPitch}"
-# make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config2d.mk clean_all
-# make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk clean_all
-# make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config2d.mk ord-synth
-# make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config2d.mk ord-preplace
-# make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config2d.mk ord-tier-partition
 mkdir -p results/nangate45_3D/${DESIGN_NICKNAME}/${FLOW_VARIANT}
 cp -r results/nangate45_3D/${DESIGN_NICKNAME}/${USE_FLOW}/partition.txt results/nangate45_3D/${DESIGN_NICKNAME}/${FLOW_VARIANT} 
 cp -r results/nangate45/${DESIGN_NICKNAME}/${USE_FLOW}/* results/nangate45_3D/${DESIGN_NICKNAME}/${FLOW_VARIANT} 
@@ -26,6 +21,8 @@ export TECH_LEF="platforms/nangate45_3D/lef/ord_pitch_variant/NangateOpenCellLib
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk ord-pre
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk ord-3d-pdn
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_upper_cover.mk ord-place-init
+make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_bottom_cover.mk ord-place-init-upper
+make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_upper_cover.mk ord-place-init-bottom
 iteration=1
 for ((i=1;i<=iteration;i++))
 do
@@ -38,4 +35,4 @@ make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_upper_cover.mk
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_bottom_cover.mk ord-legalize-upper
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config_upper_cover.mk ord-cts 
 make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk ord-route  
-make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk cds-final
+make DESIGN_CONFIG=designs/nangate45_3D/${DESIGN_NICKNAME}/config.mk ord-final
