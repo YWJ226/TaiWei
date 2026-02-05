@@ -104,6 +104,7 @@
 
 
 ## 联系方式
-
-*   **[王志昂](https://icmne.fudan.edu.cn/97/b8/c48925a759736/page.htm)（复旦大学集成芯片与系统全国重点实验室/集成电路与微纳电子创新学院助理教授）** — [zhiangwang@fudan.edu.cn](mailto:zhiangwang@fudan.edu.cn)
+欢迎就本项目的技术交流、科研合作及产业合作事宜与我们联系。
+*   **[王志昂](https://icmne.fudan.edu.cn/97/b8/c48925a759736/page.htm)**：助理教授，复旦大学集成芯片与系统全国重点实验室/集成电路与微纳电子创新学院
+*   **邮箱**： [zhiangwang@fudan.edu.cn](mailto:zhiangwang@fudan.edu.cn)
 
