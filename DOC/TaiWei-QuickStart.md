@@ -1,165 +1,117 @@
-# TaiWei 3D Flow Quick Start
+# TaiWei
 
-This is a **hands-on Quick Start** for the TaiWei meta-repository. It covers:
+**TaiWei** is an **open, reproducible, end-to-end 3D IC physical design platform** designed for **research, benchmarking, and industrial prototyping**. It provides a unified **RTL-to-GDS 3D reference flow** built on open-source engines, offering optional commercial toolchain support and **AI-based autotuning**.
 
-- What each **git submodule** is for
-- How to correctly **clone / init submodules**
-- How to **build ORFS-Research (ORD toolchain)**
-- How to **run the end-to-end 3D physical design flow** via TaiWei-Pin-3D
-
-> Repo: https://github.com/CODA-Team/TaiWei
+🔗 **Repository:** [https://github.com/CODA-Team/TaiWei](https://github.com/CODA-Team/TaiWei)
 
 ---
 
-## 0. Prerequisites
+## 🚀 Quick Start
 
-### Required (common)
-- Linux host (or Linux container on HPC)
-- `git` (>= 2.20 recommended)
-- Python 3 (and `pip`) for running experiments
+### 1. Clone with Submodules
 
-### Optional
-- Docker / Apptainer (recommended if you want a consistent environment)
-- Cadence toolchain (only if you run the commercial `cds` flow)
-
----
-
-## 1. Repository layout (submodules and their roles)
-
-TaiWei is a **meta-repo** that pins multiple components via **git submodules** for reproducibility.
-
-### 1.1 `ORFS-Research` — Core tools + flow infrastructure
-- OpenROAD-derived research platform
-- Provides the **open-source physical design engines** and flow scripts
-- Used as the underlying tool stack for the **ORD** flow
-
-### 1.2 `TaiWei-Pin-3D` — End-to-end 3D evaluation flow
-- End-to-end reproducible **face-to-face (F2F) 3DIC** physical design flow
-- Integrates Pin3D methodology and 2D toolchains (ORFS + optional Cadence)
-- **This is the submodule you run** to execute the 3D flow
-
-### 1.3 `TaiWei-flow-Agent` — Optional autotuning agent
-- An LLM-based optimization agent for ORFS-style flows
-- Optional for quick start; useful for later **autotuning / auto-exploration**
-
----
-
-## 2. Setup options
-
-Choose one setup path:
-
-### Option A: Container-based (recommended)
-Use a prebuilt container image (lab-provided or your own) so dependencies are consistent.
-
-### Option B: Native Linux install
-Install toolchain dependencies on the host directly. This is more work but convenient for developers.
-
-This document works for both, as long as:
-- `ORFS-Research` builds successfully, and
-- you can run Python 3 for `TaiWei-Pin-3D`.
-
----
-
-## 3. Clone TaiWei with submodules
+TaiWei relies on several sub-repositories. Ensure you use the `--recurse-submodules` flag:
 
 ```bash
 git clone --recurse-submodules https://github.com/CODA-Team/TaiWei.git
 cd TaiWei
+
 ```
 
----
+### 2. Build the Open-Source Toolchain
 
-## 4. Build ORFS-Research (ORD prerequisite)
-
-`TaiWei-Pin-3D` requires a working **ORFS-Research** install for the open-source `ord` flow.
-
-### 4.1 Build ORFS-Research locally
+Navigate to the research folder to set up the OpenROAD-based environment:
 
 ```bash
 cd ORFS-Research
 ./setup.sh
 ./build_openroad.sh --local
+
 ```
 
-### 4.2 Reference: ORFS / OpenROAD-flow-scripts installation resources
+### 3. Run a 3D Flow
 
-For additional installation methods and dependency guidance, refer to the official **OpenROAD-flow-scripts (ORFS)** documentation:
-
-- **OpenROAD-flow-scripts repository (includes install instructions):**  
-    https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts
-
-## 5. Configure TaiWei-Pin-3D environment
-
-Enter the 3D flow submodule:
+Execute the main entry point to run a sample experiment (e.g., the GCD case using the open-source flow). 
+You can also inspect the script to see the underlying `make` commands used by the flow.
 
 ```bash
 cd ../TaiWei-Pin-3D
-```
-
-Edit `env.sh` and set:
-
-* `WORK_DIR` : where outputs/logs will be placed
-* `ORFS_DIR` : path to your `ORFS-Research` install directory
-* `FLOW_HOME`: root of `TaiWei-Pin-3D`
-
-```bash
 source env.sh
-```
-
----
-
-## 6. Quick Start: run the 3D flow
-
-All commands below assume:
-
-* you are in `TaiWei-Pin-3D/`
-
-### 6.1 Open-source flow (ORD): ASAP7 + ASAP7 3D stack, case = GCD
-
-```bash
-python3 run_experiments.py --flow ord --tech asap7_3D --case gcd
-```
-
-### 6.2 Commercial flow (Cadence): ASAP7 + NanGate45, case = GCD
-
-> Requires Cadence toolchain configured in your environment.
-
-```bash
-python3 run_experiments.py --flow cds --tech asap7_nangate45_3D --case gcd
-```
-
-### 6.3 One-shot wrapper script example
-
-```bash
 bash experiment_scripts/gcd.sh
+
+```
+
+> **Output:** All results, including logs and design data, are generated under the `WORK_DIR/` directory.
+
+---
+
+## 📂 Repository Structure
+
+TaiWei is a **meta-repository**. All components are pinned via Git submodules to ensure perfect reproducibility.
+
+| Directory | Description |
+| --- | --- |
+| **`ORFS-Research`** | Open-source engines and the underlying flow infrastructure. |
+| **`TaiWei-Pin-3D`** | **Main entry point**: The end-to-end 3D RTL-to-GDS flow. |
+| **`TaiWei-flow-Agent`** | Optional AI/LLM-based autotuning framework. |
+
+---
+
+## 🛠️ Supported Flows
+
+Users can choose between different toolchains depending on their local environment:
+
+* **`ord`**: Fully open-source (OpenROAD-based). **Recommended** for most researchers.
+* **`cds`**: Cadence-based commercial flow.
+* **`mixed`**: A hybrid flow combining open-source and commercial toolchains.
+
+**Examples:**
+
+```bash
+# Run open-source flow
+python3 run_experiments.py --flow ord --tech asap7_3D --case gcd
+
+# Run commercial flow
+python3 run_experiments.py --flow cds --tech asap7_nangate45_3D --case gcd
+
 ```
 
 ---
 
-## 7. Results and visualization
+## 📊 Core Features
 
-After a successful run, artifacts (logs / reports / DEF/DB outputs) will be under your configured `WORK_DIR`.
+### 🔄 Reproducibility
 
-Exact file names and directories depend on the selected flow and testcase.
+To ensure fair comparison and artifact verification, every run exports:
+
+* **Logs & Stage Checkpoints**: Full history of the design process.
+* **Design Data**: DEF, DB, and GDS outputs.
+* **Standardized Metrics**: Key performance indicators (PPA) for benchmarking.
+
+### 🤖 Optional AI Autotuning
+
+The `TaiWei-flow-Agent` provides an automated layer for:
+
+* Automatic parameter search.
+* Multi-run design space exploration.
+* LLM-assisted tuning for optimized results.
 
 ---
 
-## 8. Minimal checklist (I just want to run 3D flow)
+## 📋 Requirements
 
-1. Clone TaiWei with submodules
-   `git clone --recurse-submodules ...`
-2. Build ORFS-Research
-   `cd ORFS-Research && ./setup.sh && ./build_openroad.sh --local`
-3. Configure environment
-   `cd TaiWei-Pin-3D && source env.sh`
-4. Run a 3D experiment
-   `python3 run_experiments.py --flow ord --tech asap7_3D --case gcd`
+* **Required:** * Linux (Ubuntu recommended)
+* Git >= 2.20
+* Python >= 3.8
+
+
+* **Optional:** * Docker / Apptainer (for containerized execution)
+* Cadence Tools (required for the `cds` flow)
 
 ---
 
-## Notes for maintainers
+## 📖 Documentation
 
-* Prefer **explicit commands** and **single-entry quick start** examples here so new users can run without chasing multiple repos.
-* If submodule commits are updated, ensure the pinned commit versions remain consistent and reproducible across the full flow.
-
-
+* **Build Guide:** [`ORFS-Research/README.md`](https://github.com/ieee-ceda-datc/ORFS-Research/blob/master/README.md)
+* **Flow Usage:** [`TaiWei-Pin-3D/README.md`](https://github.com/CODA-Team/TaiWei-Pin-3D/blob/main/README.md)
+* **Agent Usage:** [`TaiWei-flow-Agent/README.md`](https://github.com/CODA-Team/TaiWei-flow-Agent/blob/main/README.md)
