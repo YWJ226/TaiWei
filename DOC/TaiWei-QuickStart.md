@@ -1,6 +1,7 @@
 # TaiWei
 
-**TaiWei** is an **open, reproducible, end-to-end 3D IC physical design platform** designed for **research, benchmarking, and industrial prototyping**. It provides a unified **RTL-to-GDS 3D reference flow** built on open-source engines, offering optional commercial toolchain support and **AI-based autotuning**.
+**TaiWei** is an open-source end-to-end 3D IC physical design platform that supports research exploration, fair benchmarking and industrial prototyping. It provides a unified RTL-to-GDS 3D reference flow powered by open-source engines, while enabling seamless integration with commercial toolchains and AI-driven autotuning for efficient and scalable optimization.
+
 
 🔗 **Repository:** [https://github.com/CODA-Team/TaiWei](https://github.com/CODA-Team/TaiWei)
 
@@ -85,27 +86,26 @@ python3 run_experiments.py --flow cds --tech asap7_nangate45_3D --case gcd
 To ensure fair comparison and artifact verification, every run exports:
 
 * **Logs & Stage Checkpoints**: Full history of the design process.
-* **Design Data**: DEF, DB, and GDS outputs.
+* **Design Data**: DEF, DB and GDS outputs.
 * **Standardized Metrics**: Key performance indicators (PPA) for benchmarking.
 
 ### 🤖 Optional AI Autotuning
 
-The `TaiWei-flow-Agent` provides an automated layer for:
-
-* Automatic parameter search.
-* Multi-run design space exploration.
+The `TaiWei-flow-Agent` provides an LLM-based agent for:
+* Automatic parameter search
+* Multi-run design space exploration
 * LLM-assisted tuning for optimized results.
 
 ---
 
 ## 📋 Requirements
 
-* **Required:** * Linux (Ubuntu recommended)
+* **Required:** Linux (Ubuntu recommended)
 * Git >= 2.20
 * Python >= 3.8
 
 
-* **Optional:** * Docker / Apptainer (for containerized execution)
+* **Optional:** Docker / Apptainer (for containerized execution)
 * Cadence Tools (required for the `cds` flow)
 
 ---
@@ -115,3 +115,15 @@ The `TaiWei-flow-Agent` provides an automated layer for:
 * **Build Guide:** [`ORFS-Research/README.md`](https://github.com/ieee-ceda-datc/ORFS-Research/blob/master/README.md)
 * **Flow Usage:** [`TaiWei-Pin-3D/README.md`](https://github.com/CODA-Team/TaiWei-Pin-3D/blob/main/README.md)
 * **Agent Usage:** [`TaiWei-flow-Agent/README.md`](https://github.com/CODA-Team/TaiWei-flow-Agent/blob/main/README.md)
+
+
+## References ##
+To reference Taiwei, please cite:
+
+* L. Jiang,  A. B. Kahng, Z. Wang* (corresponding author) and Z. Zheng, "Invited: Toward Sustainable and Transparent Benchmarking for Academic Physical Design Research",
+to appear in Proc. ACM Intl. Symp. on Physical Design, 2026. (Invited Paper)
+
+
+## Acknowledgments ##
+The work of Liwen Jiang, Zhiang Wang and Zhiyu Zheng is supported partly by AI for Science Program, Shanghai Municipal Commission of Economy and Informatization (2025-GZL-RGZN-BTBX-02038), and partly by Fudan Kunpeng\&Ascend Center of Cultivation. Experimental studies are performed at the Fudan Kunpeng\&Ascend Center of Cultivation, Fudan University. 
+
