@@ -25,7 +25,7 @@ Navigate to the research folder to set up the OpenROAD-based environment:
 
 ```bash
 cd ORFS-Research
-./setup.sh
+sudo ./setup.sh
 ./build_openroad.sh --local
 
 ```
