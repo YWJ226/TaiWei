@@ -83,7 +83,7 @@
 <table style="border: none; border-collapse: collapse;">
 <tr>
 <td align="center" width="200" style="padding: 20px; border: none;">
-<img src="images/HiSilicon-logo.svg" alt="华为海思" style="max-width: 180px; max-height: 100px;">
+<img src="images/Empyrean-logo.png" alt="华大九天" style="max-width: 180px; max-height: 100px;">
 </td>
 <td align="center" width="200" style="padding: 20px; border: none;">
 <img src="images/pftn-logo.png" alt="培风图南" style="max-width: 180px; max-height: 100px;">
