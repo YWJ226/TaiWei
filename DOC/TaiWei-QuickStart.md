@@ -120,7 +120,7 @@ The `TaiWei-flow-Agent` provides an LLM-based agent for:
 ## References ##
 To reference Taiwei, please cite:
 
-* L. Jiang,  A. B. Kahng, Z. Wang* (corresponding author) and Z. Zheng, "Invited: Toward Sustainable and Transparent Benchmarking for Academic Physical Design Research",
+L. Jiang,  A. B. Kahng, **Z. Wang** (corresponding author) and Z. Zheng, "Invited: Toward Sustainable and Transparent Benchmarking for Academic Physical Design Research",
 to appear in Proc. ACM Intl. Symp. on Physical Design, 2026. (Invited Paper)
 
 
