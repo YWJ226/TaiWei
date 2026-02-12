@@ -1,4 +1,5 @@
 # local temp files
 .DS_Store
+core.*
 # local scripts
 openroad.sh
