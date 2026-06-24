@@ -1,0 +1,87 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug: ord-place-upper (aes)",
+            // "name": "Debug: global_route (GRT -resistance_aware)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/home/chensunan/TaiWei/ORFS-Research/tools/OpenROAD/build/bin/openroad",
+            "args": [
+                "-no_init",
+                "-threads", "16",
+                "-exit",
+                "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad/place_upper.tcl"
+                // "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad/global_route.tcl"
+            ],
+            "cwd": "/home/chensunan/TaiWei/TaiWei-Pin-3D",
+            "environment": [
+                { "name": "FLOW_HOME",           "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D" },
+                { "name": "DESIGN_HOME",         "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/designs" },
+                { "name": "PLATFORM_HOME",       "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms" },
+                { "name": "PLATFORM_DIR",        "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D" },
+                { "name": "OPENROAD_SCRIPTS_DIR","value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad" },
+
+                { "name": "DESIGN_NAME",         "value": "aes_cipher_top" },
+                { "name": "DESIGN_NICKNAME",     "value": "aes" },
+                { "name": "PLATFORM",            "value": "asap7_nangate45_3D" },
+                { "name": "DESIGN_DIMENSION",    "value": "3D" },
+                { "name": "FLOW_VARIANT",        "value": "debug_openroad" },
+                { "name": "USE_FLOW",            "value": "openroad" },
+
+                { "name": "NUM_CORES",           "value": "16" },
+                { "name": "GPL_TIMING_DRIVEN",   "value": "1" },
+                { "name": "GPL_ROUTABILITY_DRIVEN","value": "1" },
+
+                { "name": "RESULTS_DIR",         "value": "./results/asap7_nangate45_3D/aes/debug_openroad" },
+                { "name": "LOG_DIR",             "value": "./logs/asap7_nangate45_3D/aes/debug_openroad" },
+                { "name": "OBJECTS_DIR",         "value": "./objects/asap7_nangate45_3D/aes/debug_openroad" },
+                { "name": "REPORTS_DIR",         "value": "./reports/asap7_nangate45_3D/aes/debug_openroad" },
+
+                { "name": "PLACE_DENSITY",       "value": "0.60" },
+                { "name": "PLACE_DENSITY_LB_ADDON","value": "0.10" },
+                { "name": "CELL_PAD_IN_SITES_GLOBAL_PLACEMENT", "value": "0" },
+                { "name": "CELL_PAD_IN_SITES_DETAIL_PLACEMENT", "value": "0" },
+                { "name": "CORE_UTILIZATION",    "value": "60" },
+                { "name": "CORE_MARGIN",         "value": "2" },
+                { "name": "CORE_ASPECT_RATIO",   "value": "1.0" },
+                { "name": "TNS_END_PERCENT",     "value": "100" },
+                { "name": "SKIP_GATE_CLONING",   "value": "1" },
+
+                { "name": "CTS_LAYER",           "value": "upper" },
+                { "name": "PLACE_SITE",          "value": "FreePDK45_38x28_10R_NP_162NW_34O" },
+                { "name": "UPPER_SITE",          "value": "asap7sc7p5t" },
+                { "name": "BOTTOM_SITE",         "value": "FreePDK45_38x28_10R_NP_162NW_34O" },
+                { "name": "MIN_ROUTING_LAYER",   "value": "M2" },
+                { "name": "MAX_ROUTING_LAYER",   "value": "M3_add" },
+                { "name": "MIN_CLK_ROUTING_LAYER", "value": "M2" },
+
+                { "name": "SET_RC_TCL",          "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/setRC_2A6M10M.tcl" },
+                { "name": "GLOBAL_ROUTE_ARGS",   "value": "-resistance_aware" },
+                { "name": "FASTROUTE_TCL",       "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/fastroute.tcl" },
+                { "name": "PDN_TCL",             "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/openRoad/pdn/grid_strategy-3D.tcl" },
+
+                { "name": "MACRO_PLACE_HALO_UPPER",  "value": "1 1" },
+                { "name": "MACRO_PLACE_HALO_BOTTOM", "value": "5 5" },
+
+                { "name": "UPPER_TIEHI_CELL_AND_PORT",  "value": "TIEHIx1_ASAP7_75t_R_upper H" },
+                { "name": "UPPER_TIELO_CELL_AND_PORT",  "value": "TIELOx1_ASAP7_75t_R_upper L" },
+                { "name": "BOTTOM_TIEHI_CELL_AND_PORT", "value": "LOGIC0_X1_bottom Z" },
+                { "name": "BOTTOM_TIELO_CELL_AND_PORT", "value": "LOGIC1_X1_bottom Z" },
+
+                { "name": "LEF_FILES", "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lef/asap7_nangate45_2A6M10M.lef /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lef_bottom/NangateOpenCellLibrary.macro.mod.bottom.cover.processed.lef /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lef_upper/asap7sc7p5t_28_R_1x_220121a.upper.processed.lef" },
+
+                { "name": "LIB_FILES", "value": "/home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_bottom/NangateOpenCellLibrary_typical.bottom.processed.lib /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_upper/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.upper.processed.lib /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_upper/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.upper.processed.lib /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_upper/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.upper.processed.lib /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_upper/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.upper.processed.lib /home/chensunan/TaiWei/TaiWei-Pin-3D/platforms/asap7_nangate45_3D/lib_upper/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.upper.processed.lib" }
+            ],
+            "MIMode": "gdb",
+            "externalConsole": false,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

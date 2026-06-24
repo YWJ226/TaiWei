@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run OpenROAD Flow",
+            "type": "shell",
+            "command": "bash test/common/run_stage.sh asap7_nangate45_3D debug_openroad openroad gcd ord-timing-detailed-placement",
+            "options": {
+                "cwd": "${workspaceFolder}/TaiWei-Pin-3D"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
+        }
+    ]
+}
