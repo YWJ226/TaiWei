@@ -11,7 +11,7 @@
                 "-no_init",
                 "-threads", "16",
                 "-exit",
-                "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad/place_upper.tcl"
+                "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad/place_bottom.tcl"
                 // "/home/chensunan/TaiWei/TaiWei-Pin-3D/scripts_openroad/global_route.tcl"
             ],
             "cwd": "/home/chensunan/TaiWei/TaiWei-Pin-3D",
